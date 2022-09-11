@@ -6,10 +6,8 @@ body {
 #board {
     height: 540px;
     width: 630px;
-
     background-color: blue;
     border: 10px solid navy;
-
     margin: 0 auto;
     display: flex;
     flex-wrap: wrap;
