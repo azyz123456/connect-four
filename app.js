@@ -1,14 +1,12 @@
+let playerRed = "red";
+let playerYellow = "yellow";
+let currPlayer = playerRed;
+let gameOver = false;
+let winner = document.querySelector("h2");
+let board;
 
-var playerRed = "R";
-var playerYellow = "Y";
-var currPlayer = playerRed;
-
-var gameOver = false;
-var board;
-
-var rows = 6;
-var columns = 7;
-var currColumns = []; //keeps track of which row each column is at.
+let rows=6;
+let columns=7;
 
 window.onload = function() {
     setGame();
@@ -35,45 +33,102 @@ function setGame() {
 }
 
 function setPiece() {
+
     if (gameOver) {
         return;
     }
+    
+    let c = this.id[this.id.length-1];
+    let r=currColumns[c];
 
-    //get coords of that tile clicked
-    let coords = this.id.split("-");
-    let r = parseInt(coords[0]);
-    let c = parseInt(coords[1]);
-
-    // figure out which row the current column should be on
-    r = currColumns[c]; 
-
-    if (r < 0) { // board[r][c] != ' '
+    if (r<0) {
         return;
     }
-
-    board[r][c] = currPlayer; //update JS board
+    
+    board[r][c] = currPlayer;
     let tile = document.getElementById(r.toString() + "-" + c.toString());
-    if (currPlayer == playerRed) {
-        tile.classList.add("red");
+    tile.classList.add(currPlayer);
+
+    checkWin(r,c,currPlayer);
+
+    if (currPlayer===playerRed) {
         currPlayer = playerYellow;
-    }
-    else {
-        tile.classList.add("yellow");
+    } else if (currPlayer===playerYellow) {
         currPlayer = playerRed;
     }
 
-    r -= 1; //update the row height for that column
-    currColumns[c] = r; //update the array
-
-    checkWinner();
+    currColumns[c]--;
+    
 }
 
-function checkWinner() {
+function checkWin(r, c, currPlayer) {
+    //horizontal
+        //1st in row
+        if (board[r][c]===currPlayer && board[r][c+1]===currPlayer && board[r][c+2]===currPlayer && board[r][c+3]===currPlayer) {
+            setWinner(currPlayer);
+        } 
+        //2nd in row
+        else if (board[r][c]===currPlayer && board[r][c-1]===currPlayer && board[r][c+1]===currPlayer && board[r][c+2]===currPlayer) {
+            setWinner(currPlayer);
+        }
+        //3rd in row
+        else if (board[r][c]===currPlayer && board[r][c-1]===currPlayer && board[r][c-2]===currPlayer && board[r][c+1]===currPlayer) {
+            setWinner(currPlayer);
+        }
+        //4th in row
+        else if (board[r][c]===currPlayer && board[r][c-1]===currPlayer && board[r][c-2]===currPlayer && board[r][c-3]===currPlayer) {
+            setWinner(currPlayer);
+        }
 
+    //vertical
+        //1st in column
+        if (board[r][c]===currPlayer && board[r+1]?.[c]===currPlayer && board[r+2]?.[c] && board[r+3]?.[c]){
+            setWinner(currPlayer);
+        }
+        //2nd in column
+        else if (board[r][c]===currPlayer && board[r-1]?.[c]===currPlayer && board[r+1]?.[c] && board[r+2]?.[c]){
+            setWinner(currPlayer);
+        }
+        //3rd in column
+        else if (board[r][c]===currPlayer && board[r-2]?.[c]===currPlayer && board[r-1]?.[c] && board[r+1]?.[c]){
+            setWinner(currPlayer);
+        }
+        //4th in column
+        else if (board[r][c]===currPlayer && board[r-3]?.[c]===currPlayer && board[r-2]?.[c] && board[r-1]?.[c]){
+            setWinner(currPlayer);
+        }
+
+        //left to right diagonal
+            if (board[r][c]===currPlayer && board[r-1]?.[c-1]===currPlayer && board[r-2]?.[c-2] && board[r-3]?.[c-3]){
+                setWinner(currPlayer);
+            }
+            else if (board[r][c]===currPlayer && board[r-1]?.[c-1]===currPlayer && board[r-2]?.[c-2] && board[r+1]?.[c+1]){
+                setWinner(currPlayer);
+            }
+            else if (board[r][c]===currPlayer && board[r-1]?.[c-1]===currPlayer && board[r+1]?.[c+1] && board[r+2]?.[c+2]){
+                setWinner(currPlayer);
+            }
+            else if (board[r][c]===currPlayer && board[r+1]?.[c+1]===currPlayer && board[r+2]?.[c+2] && board[r+3]?.[c+3]){
+                setWinner(currPlayer);
+            }
+
+        //right to left diagonal
+            if (board[r][c]===currPlayer && board[r-1]?.[c+1]===currPlayer && board[r-2]?.[c+2] && board[r-3]?.[c+3]){
+                setWinner(currPlayer);
+            }
+            else if (board[r][c]===currPlayer && board[r-1]?.[c+1]===currPlayer && board[r-2]?.[c+2] && board[r+1]?.[c-1]){
+                setWinner(currPlayer);
+            }
+            else if (board[r][c]===currPlayer && board[r-1]?.[c+1]===currPlayer && board[r+1]?.[c-1] && board[r+2]?.[c-2]){
+                setWinner(currPlayer);
+            }
+            else if (board[r][c]===currPlayer && board[r+1]?.[c-1]===currPlayer && board[r+2]?.[c-2] && board[r+3]?.[c-3]){
+                setWinner(currPlayer);
+            }
 }
 
-function setWinner(r, c) {
 
+function setWinner(player) {
+    winner.innerHTML = player + " wins!";
+    gameOver = true;
 }
-
-
